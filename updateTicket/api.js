@@ -102,11 +102,11 @@ const updateTicket = async (ticket, comment) => {
     if (!webClient) return null;
     const tpeComment = await findTpeComment(ticket);
     // console.log(`Updating ticket ${ticket.ticketId} with comment: `, tpeComment);
-    const useHtmlTranscript = !(tpeComment && !tpeComment.data?.transcript);
-    const htmlComment = comment.htmlStats + (useHtmlTranscript ? comment.htmlTranscript : '');
-    if (!useHtmlTranscript) {
+    const useTpeTranscript = tpeComment && process.env.TRANSCRIPT_LOCATION === 'Voice comment';
+    const htmlComment = comment.htmlStats + (useTpeTranscript ? '' : comment.htmlTranscript);
+    if (useTpeTranscript) {
         // update tpe comment with plaintext transcript
-        const callUpdateUrl = `/api/v2/tickets/${tpeComment.data.call_id}`;
+        const callUpdateUrl = `/api/v2/calls/${tpeComment.data.call_id}`;
         const response = await webClient.patch(callUpdateUrl, {
             transcript: comment.plainTextTranscript
         }).catch((err) => {

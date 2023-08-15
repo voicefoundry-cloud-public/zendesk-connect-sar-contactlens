@@ -36,7 +36,13 @@ Parameters:
   TimeZone:
     Type: String
     Description: "Time zone (eg. Australia/Sydney) to be used when linking to Connect Contact Trace Records. For a full list see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
-  
+  TranscriptLocation:
+    Type: String
+    Description: "Location of call transcription"
+    AllowedValues:
+      - "Voice comment"
+      - "Private comment (legacy)"
+    Default: "Voice comment"  
   
 ######################### Metadata ############################
 Metadata:
@@ -103,6 +109,7 @@ Resources:
           ZD_EMAIL: !Ref ZendeskEmailID
           ZD_TOKEN: !Ref ZendeskToken 
           ZD_URL: !Ref ZendeskURL
+          TRANSCRIPT_LOCATION: !Ref TranscriptLocation
 
       Events:
         scheduledEvent:

@@ -86,13 +86,14 @@ const buildTranscript = (analysis, plaintext = false) => {
         const sentiment = turn.Sentiment.toLowerCase();
         const smiley = plaintext ? smileyIcons[sentiment] : `<div class="sentiment-icon sentiment-icon-${role}" style="background-color: #fafafa;">${smileyIcons[sentiment]}</div>`;
         const timeOffset = timeMark(turn.BeginOffsetMillis / 1000);
+        const content = turn.Content;
         return markup + (plaintext 
-            ? `\n${role} ${smiley}[${timeOffset}] ${turn.content}`
+            ? `\n${role} ${smiley}[${timeOffset}] ${content}`
             : `<div class="${role}-time">${role.toUpperCase()} &#183; ${timeOffset}</div>` +
             `<div class="${role}-turn">` +
             (role === 'agent'
-                ? `${smiley}<div class="turn-bubble">${turn.Content}</div>`
-                : `<div class="turn-bubble">${turn.Content}</div>${smiley}`) +
+                ? `${smiley}<div class="turn-bubble">${content}</div>`
+                : `<div class="turn-bubble">${content}</div>${smiley}`) +
             `</div>`);
     }, '');
 };
