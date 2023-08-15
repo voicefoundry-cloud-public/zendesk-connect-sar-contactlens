@@ -45,40 +45,55 @@ const getCTRLink = (analysis) => {
     return `<a href="${url}" rel="noreferer" target="_blank">contact trace record</a>`;
 };
 
-const buildConversationCharacteristics = (analysis) => {
-    const nonTalkTime = analysis.ConversationCharacteristics.NonTalkTime.TotalTimeMillis;
-    const agentTalkTime = analysis.ConversationCharacteristics.TalkTime.DetailsByParticipant.AGENT.TotalTimeMillis;
-    const customerTalkTime = analysis.ConversationCharacteristics.TalkTime.DetailsByParticipant.CUSTOMER.TotalTimeMillis;
+const buildConversationCharacteristics = (analysis, side) => {
+    const forAgent = side === 'Agent';
+    const { ConversationCharacteristics } = analysis;
+    const nonTalkTime = ConversationCharacteristics.NonTalkTime.TotalTimeMillis;
+    const { AGENT: agentTalk, CUSTOMER: customerTalk } = ConversationCharacteristics.TalkTime.DetailsByParticipant;
+    const agentTalkTime = agentTalk.TotalTimeMillis;
+    const customerTalkTime = customerTalk.TotalTimeMillis;
     const totalTime = nonTalkTime + agentTalkTime + customerTalkTime;
-    const agentTalkRate = roundPercentRate(agentTalkTime, totalTime);
-    const customerTalkRate = roundPercentRate(customerTalkTime, totalTime);
-    return `<p>Non-talk time: ${100 - (agentTalkRate + customerTalkRate)}%</p>` + 
-        `<p>Customer talk time: ${customerTalkRate}%</p><p>Agent talk time: ${agentTalkRate}%</p>`;
+    const talkRate = roundPercentRate(forAgent ? agentTalkTime : customerTalkTime, totalTime);
+    const { AGENT: agentInterruptions, CUSTOMER: customerInterruptions } = ConversationCharacteristics.Interruptions.InterruptionsByInterrupter;
+    const interruptions = forAgent ? (agentInterruptions?.length || 0) : (customerInterruptions?.length || 0);
+    const { AGENT: agentTalkSpeed, CUSTOMER: customerTalkSpeed } = ConversationCharacteristics.TalkSpeed.DetailsByParticipant;
+    const talkSpeed = forAgent ? (agentTalkSpeed?.AverageWordsPerMinute || 'n/a') : (customerTalkSpeed?.AverageWordsPerMinute || 'n/a');
+    let htmlSection = `
+        <p>${side} interruptions: ${interruptions}</p>
+        <p>${side} talk speed: ${talkSpeed} words/min</p>
+        <p>${side} talk time: ${talkRate}%</p>`;
+    if (forAgent) {
+        const customerTalkRate = roundPercentRate(customerTalkTime, totalTime);
+        htmlSection += `<p>Non-talk time: ${100 - (talkRate + customerTalkRate)}%</p>`;
+    }
+    return htmlSection;
 };
 
-const buildTranscript = (analysis) => {
+const buildTranscript = (analysis, plaintext = false) => {
     const agentId = analysis.Participants.find((p) => p.ParticipantRole === 'AGENT').ParticipantId;
     const timeMark = (time) => {
         const formatPart = (num) => Math.floor(num).toString().padStart(2, '0');
         return formatPart(time / 60) + ':' + formatPart(time % 60);
     };
     const smileyIcons = {
-        positive: '&#x1F600',
-        neutral: '&#x1F610',
-        mixed: '&#x1F615',
-        negative: '&#x1F620'
+        positive: plaintext ? '😀' : '&#x1F600',
+        neutral: plaintext ? '😐' : '&#x1F610',
+        mixed: plaintext ? '😕' : '&#x1F615',
+        negative: plaintext ? '😠' : '&#x1F620'
     };
     return analysis.Transcript.reduce((markup, turn) => {
         const role = turn.ParticipantId === agentId ? 'agent' : 'customer';
         const sentiment = turn.Sentiment.toLowerCase();
-        const smiley = `<div class="sentiment-icon sentiment-icon-${role}" style="background-color: #fafafa;">${smileyIcons[sentiment]}</div>`;
-        return markup +
-            `<div class="${role}-time">${role.toUpperCase()} &#183; ${timeMark(turn.BeginOffsetMillis / 1000)}</div>` + 
+        const smiley = plaintext ? smileyIcons[sentiment] : `<div class="sentiment-icon sentiment-icon-${role}" style="background-color: #fafafa;">${smileyIcons[sentiment]}</div>`;
+        const timeOffset = timeMark(turn.BeginOffsetMillis / 1000);
+        return markup + (plaintext 
+            ? `\n${role} ${smiley}[${timeOffset}] ${turn.content}`
+            : `<div class="${role}-time">${role.toUpperCase()} &#183; ${timeOffset}</div>` +
             `<div class="${role}-turn">` +
             (role === 'agent'
                 ? `${smiley}<div class="turn-bubble">${turn.Content}</div>`
                 : `<div class="turn-bubble">${turn.Content}</div>${smiley}`) +
-            `</div>`;
+            `</div>`);
     }, '');
 };
 
@@ -87,24 +102,28 @@ const buildComment = (analysis) => {
     const contactIdNote = `<div><strong>Contact ID: </strong>${analysis.CustomerMetadata.ContactId}</div>`;
     // sectionCategories
     const categories = analysis.Categories.MatchedCategories;
-    const sectionCategories = categories.length 
+    const sectionCategories = categories.length
         ? getTitle('Categories') + `<div>${buildCategories(categories)}</div>`
         : '';
     // overall sentiment analysis
-    const sectionSentiment = getTitle('Overall sentiment analysis') + 
-        `<div style="float:left; width: 50%">${buildOverallSentiment(analysis, 'Agent')}</div>` + 
-        `<div>${buildOverallSentiment(analysis, 'Customer')}</div>` + 
-        `<div style="margin-top: 8px; font-style: italic;">For a more detailed sentiment analysis, ` +
-        `view the ${getCTRLink(analysis)}</div>`; 
-    // talk times
-    const sectionConversation = getTitle('Conversation characteristics') + 
-        `<div style="margin-bottom: 10px;">${buildConversationCharacteristics(analysis)}</div>`;
+    const sectionSentiment = getTitle('Overall sentiment analysis') + `
+        <div style="float:left; width: 50%">${buildOverallSentiment(analysis, 'Agent')}</div>
+        <div>${buildOverallSentiment(analysis, 'Customer')}</div>
+        <div style="margin-top: 8px; font-style: italic;">For a more detailed sentiment analysis,
+            view the ${getCTRLink(analysis)}</div>`;
+    // talk speed, interruptions and times
+    const sectionConversation = getTitle('Conversation characteristics') + `
+        <div style="float:left; width: 50%;">${buildConversationCharacteristics(analysis, 'Agent')}</div>
+        <div>${buildConversationCharacteristics(analysis, 'Customer')}</div><div style="margin-bottom: 10px;">&nbsp;</div>`;
     // transcript
     const sectionTranscript = `<div class="contact-lens-section-title" style="margin-top: 6px;">Transcript</div>` + buildTranscript(analysis);
+    const plainTextTranscript = buildTranscript(analysis, true);
 
-    return header() + 
-        wrapInBox(contactIdNote + sectionCategories + sectionSentiment + sectionConversation) + 
-        wrapInBox(sectionTranscript);
+    return { 
+        htmlStats: header() + wrapInBox(contactIdNote + sectionCategories + sectionSentiment + sectionConversation),
+        htmlTranscript: wrapInBox(sectionTranscript),
+        plainTextTranscript,
+    };
 };
 
 module.exports = buildComment;

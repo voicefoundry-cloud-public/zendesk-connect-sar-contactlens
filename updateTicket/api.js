@@ -88,14 +88,38 @@ const findTickets = async (contacts) => {
 };
 
 const updateTicket = async (ticket, comment) => {
+    const findTpeComment = async (ticket) => {
+        const tpeCommentsUrl = `/api/v2/tickets/${ticket.ticketId}/comments.json`;
+        const response = await querySupport(webClient, tpeCommentsUrl);
+        if (!response) return null;
+        // console.log('ZD Ticket comments API response: ', response.data);
+        const tpeComment = response.data.comments.find((comment) => comment.type === 'TpeVoiceComment' && 
+            comment.data.external_id === ticket.contactId);
+        return tpeComment;
+    };
+    
     const webClient = init(ticket.agentEmail);
     if (!webClient) return null;
-    // console.log(`Updating ticket ${ticket.ticketId} with comment: `, comment);
-    const updateUrl = `/api/v2/tickets/${ticket.ticketId}.json?async=true`;
-    const response = await webClient.put(updateUrl, {
+    const tpeComment = await findTpeComment(ticket);
+    // console.log(`Updating ticket ${ticket.ticketId} with comment: `, tpeComment);
+    const useHtmlTranscript = !(tpeComment && !tpeComment.data?.transcript);
+    const htmlComment = comment.htmlStats + (useHtmlTranscript ? comment.htmlTranscript : '');
+    if (!useHtmlTranscript) {
+        // update tpe comment with plaintext transcript
+        const callUpdateUrl = `/api/v2/tickets/${tpeComment.data.call_id}`;
+        const response = await webClient.patch(callUpdateUrl, {
+            transcript: comment.plainTextTranscript
+        }).catch((err) => {
+            console.error('Error while updating call object: ', err);
+            return { status: 500 };
+        });
+        console.log('Updated call object; response status: ', response.status);
+    }
+    const ticketUpdateUrl = `/api/v2/tickets/${ticket.ticketId}.json?async=true`;
+    const response = await webClient.put(ticketUpdateUrl, {
         ticket: {
             comment: {
-                html_body: `<div>${comment}</div>`,
+                html_body: `<div>${htmlComment}</div>`,
                 public: false
             }
         }
@@ -103,7 +127,7 @@ const updateTicket = async (ticket, comment) => {
         console.error('Error while updating ticket: ', err);
         return { status: 500 };
     });
-    console.log('Updated ticket response status: ', response.status);
+    console.log('Updated ticket; response status: ', response.status);
     return response.status === 200;
 };
 
