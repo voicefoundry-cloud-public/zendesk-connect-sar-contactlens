@@ -105,18 +105,18 @@ const updateTicket = async (ticket, comment) => {
     const useTpeTranscript = tpeComment && process.env.TRANSCRIPT_LOCATION === 'Voice comment';
     const htmlComment = comment.htmlStats + (useTpeTranscript ? '' : comment.htmlTranscript);
     if (useTpeTranscript) {
-        // update tpe comment with plaintext transcript
+        // update tpe call object with plaintext transcript
         const callUpdateUrl = `/api/v2/calls/${tpeComment.data.call_id}`;
-        const response = await webClient.patch(callUpdateUrl, {
+        const tpeResponse = await webClient.patch(callUpdateUrl, {
             transcript: comment.plainTextTranscript
         }).catch((err) => {
             console.error('Error while updating call object: ', err);
             return { status: 500 };
         });
-        console.log('Updated call object; response status: ', response.status);
+        console.log('Updated call object; response status: ', tpeResponse.status);
     }
     const ticketUpdateUrl = `/api/v2/tickets/${ticket.ticketId}.json?async=true`;
-    const response = await webClient.put(ticketUpdateUrl, {
+    const ticketResponse = await webClient.put(ticketUpdateUrl, {
         ticket: {
             comment: {
                 html_body: `<div>${htmlComment}</div>`,
@@ -127,8 +127,20 @@ const updateTicket = async (ticket, comment) => {
         console.error('Error while updating ticket: ', err);
         return { status: 500 };
     });
-    console.log('Updated ticket; response status: ', response.status);
-    return response.status === 200;
+    console.log('Updated ticket; response status: ', ticketResponse.status);
+    if (useTpeTranscript) {
+        // add voice comment with plaintext transcript
+        const voiceCommentUpdateUrl = `/api/v2/calls/${tpeComment.data.call_id}/comments`;
+        const tpeResponse = await webClient.post(voiceCommentUpdateUrl, {
+            title: tpeComment.data.title,
+            call_fields: ["call_started_at", "direction", "transcript", "external_id"],
+        }).catch((err) => {
+            console.error('Error while creating tpe voice comment: ', err);
+            return { status: 500 };
+        });
+        console.log('Updated tpe voice comment; response status: ', tpeResponse.status);
+    }
+    return ticketResponse.status === 200;
 };
 
 module.exports = {
