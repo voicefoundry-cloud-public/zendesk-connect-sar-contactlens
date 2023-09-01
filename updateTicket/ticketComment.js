@@ -88,7 +88,7 @@ const buildTranscript = (analysis, plaintext = false) => {
         const timeOffset = timeMark(turn.BeginOffsetMillis / 1000);
         const content = turn.Content;
         return markup + (plaintext 
-            ? `\n${role} ${smiley}[${timeOffset}] ${content}`
+            ? `\n[${timeOffset}] ${smiley} ${role}: ${content}`
             : `<div class="${role}-time">${role.toUpperCase()} &#183; ${timeOffset}</div>` +
             `<div class="${role}-turn">` +
             (role === 'agent'
