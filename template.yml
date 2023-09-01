@@ -55,7 +55,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['Connect','Contact-Lens', 'Zendesk', 'Sentiment', 'Transcript']
     HomePageUrl: https://github.com/voicefoundry-cloud-public/zendesk-connect-sar-contactlens
-    SemanticVersion: 2.0.0
+    SemanticVersion: 2.1.0
     SourceCodeUrl: https://github.com/voicefoundry-cloud-public/zendesk-connect-sar-contactlens
 
 Resources:
