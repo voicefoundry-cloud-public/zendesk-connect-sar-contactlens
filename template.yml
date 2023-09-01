@@ -41,7 +41,7 @@ Parameters:
     Description: "Location of call transcription"
     AllowedValues:
       - "Voice comment"
-      - "Private comment (legacy)"
+      - "Internal note (legacy)"
     Default: "Voice comment"  
   
 ######################### Metadata ############################
