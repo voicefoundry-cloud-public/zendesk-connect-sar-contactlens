@@ -71,4 +71,4 @@ const headerString = () => `<style>
 }
 </style>`;
 
-module.exports = headerString;
+export default headerString;

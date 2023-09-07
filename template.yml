@@ -84,7 +84,7 @@ Resources:
     Properties:
       FunctionName: !Sub "contactLensZendeskUpdate-${TargetEnvironment}"
       Description: "Triggered on upload of Contact Lens analysis to S3 bucket, it finds and updates the matching Zendesk support ticket"
-      Runtime: nodejs16.x
+      Runtime: nodejs18.x
       Handler: index.handler
       CodeUri: updateTicket/
       Timeout: 240

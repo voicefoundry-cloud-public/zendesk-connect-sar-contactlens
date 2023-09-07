@@ -1,4 +1,4 @@
-const header = require('./commentHeader');
+import header from './commentHeader.mjs';
 
 const wrapInBox = (contents) => {
     return `<div class="contact-lens-box">${contents}</div>`;
@@ -127,4 +127,4 @@ const buildComment = (analysis) => {
     };
 };
 
-module.exports = buildComment;
+export default buildComment;

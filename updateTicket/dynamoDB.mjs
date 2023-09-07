@@ -1,5 +1,5 @@
-const AWS = require('aws-sdk');
-const dynamoDB = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
+import { DynamoDBClient, GetItemCommand, ScanCommand, PutItemCommand, DeleteItemCommand } from "@aws-sdk/client-dynamodb";
+const client = new DynamoDBClient({});
 
 const getRetryKey = async (contactId) => {
     const params = {
@@ -7,7 +7,8 @@ const getRetryKey = async (contactId) => {
         ProjectionExpression: 's3key',
         TableName: process.env.RETRIES_TABLE
     };
-    const result = await dynamoDB.getItem(params).promise().catch((err) => {
+    const command = new GetItemCommand(params);
+    const result = await client.send(command).catch((err) => {
         const message = `Error getting contact ${contactId} from DynamoDB.`;
         console.error(message, err);
         return null; // TODO: raise a cloudwatch alert
@@ -25,7 +26,8 @@ const getAllRetries = async () => {
         ProjectionExpression: 'contactId',
         TableName: process.env.RETRIES_TABLE
     };
-    const results = await dynamoDB.scan(params).promise().catch((err) => {
+    const command = new ScanCommand(params);
+    const results = await client.send(command).catch((err) => {
         const message = 'Error scanning DynamoDB for items.';
         console.error(message, err);
         return {}; // TODO: raise a cloudwatch alert
@@ -44,7 +46,8 @@ const addRetry = async ({ contactId, s3key }) => {
         ReturnConsumedCapacity: 'TOTAL',
         TableName: process.env.RETRIES_TABLE
     };
-    await dynamoDB.putItem(params).promise().catch((err) => {
+    const command = new PutItemCommand(params);
+    await client.send(command).catch((err) => {
         const message = 'Error adding new item to DynamoDB.';
         console.error(message, err);
         return false; // TODO: raise a cloudwatch alert
@@ -57,7 +60,8 @@ const deleteRetry = async (contactId) => {
         Key: { contactId: { S: contactId } },
         TableName: process.env.RETRIES_TABLE
     };
-    await dynamoDB.deleteItem(params).promise().catch((err) => {
+    const command = new DeleteItemCommand(params);
+    await client.send(command).catch((err) => {
         const message = `Error deleting record ${contactId} from DynamoDB.`;
         console.error(message, err);
         return false; // TODO: raise a cloudwatch alert
@@ -65,7 +69,7 @@ const deleteRetry = async (contactId) => {
     return true;
 };
 
-module.exports = {
+export default {
     getRetryKey,
     getAllRetries,
     addRetry,
