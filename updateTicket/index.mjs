@@ -1,11 +1,11 @@
 console.log('Loading function');
 
-const api = require('./api');
-const dynamoDB = require('./dynamoDB');
-const s3 = require('./s3');
-const buildComment = require('./ticketComment');
+import api from './api.mjs';
+import buildComment from './ticketComment.mjs';
+import dynamoDB  from './dynamoDB.mjs';
+import s3 from './s3.mjs';
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
     // console.log('Received event:', JSON.stringify(event, null, 2));
 
     if (event.Records) {

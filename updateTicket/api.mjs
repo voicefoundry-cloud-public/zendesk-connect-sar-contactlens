@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios  from 'axios';
 
 const init = (email) => {
     const credentials = {
@@ -143,7 +143,7 @@ const updateTicket = async (ticket, comment) => {
     return ticketResponse.status === 200;
 };
 
-module.exports = {
+export default {
     findTickets,
     updateTicket
 };
