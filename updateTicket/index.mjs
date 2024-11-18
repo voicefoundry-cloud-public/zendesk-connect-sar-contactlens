@@ -5,12 +5,20 @@ import buildComment from './ticketComment.mjs';
 import dynamoDB  from './dynamoDB.mjs';
 import s3 from './s3.mjs';
 
+// AwareSuper POC: obtain pre-signed URL
+import { preSignUrl } from './preSignUrl.mjs';
+
 export const handler = async (event, context) => {
     // console.log('Received event:', JSON.stringify(event, null, 2));
 
     if (event.Records) {
         // Get the key of s3 object that triggered this function by being uploaded to the bucket
         const s3key = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
+
+        // AwareSuper POC: obtain pre-signed URL
+        const preSignedUrl = await preSignUrl(s3key);
+        console.log(`Pre-signed URL for ${s3key}: `, preSignedUrl);
+
         // then get the analysis object itself
         const { contactId, analysis } = await s3.getAnalysis(s3key);
         // console.log('Analysis record: ', { contactId, analysis });

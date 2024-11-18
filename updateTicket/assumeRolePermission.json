@@ -1,0 +1,12 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::243910111328:role/serverlessrepo-Contact-Le-functionUpdateTicketRole-E4SBTJUAZT5I" // (lambda execution role)
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
