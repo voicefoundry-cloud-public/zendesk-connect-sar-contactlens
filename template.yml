@@ -55,11 +55,17 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['Connect','Contact-Lens', 'Zendesk', 'Sentiment', 'Transcript']
     HomePageUrl: https://github.com/voicefoundry-cloud-public/zendesk-connect-sar-contactlens
-    SemanticVersion: 2.1.0
+    SemanticVersion: 2.1.1
     SourceCodeUrl: https://github.com/voicefoundry-cloud-public/zendesk-connect-sar-contactlens
 
 Resources:
 
+  ######################### Zendesk token #######################
+  ZendeskTokenSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: zc-API-Token-contact-lens
+      SecretString: !Ref ZendeskToken
   ######################### DynamoDB ##########################
   tableZendeskRetries:
     Type: AWS::DynamoDB::Table
@@ -84,7 +90,7 @@ Resources:
     Properties:
       FunctionName: !Sub "contactLensZendeskUpdate-${TargetEnvironment}"
       Description: "Triggered on upload of Contact Lens analysis to S3 bucket, it finds and updates the matching Zendesk support ticket"
-      Runtime: nodejs18.x
+      Runtime: nodejs20.x
       Handler: index.handler
       CodeUri: updateTicket/
       Timeout: 240
@@ -96,6 +102,12 @@ Resources:
             KeyId: !Ref ConnectMasterKeyId
         - DynamoDBCrudPolicy:
             TableName: !Ref tableZendeskRetries
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Ref ZendeskTokenSecret
+
       Environment:
         Variables:
           CONTACT_LENS_BUCKET: !Ref ConnectBucket
@@ -107,7 +119,7 @@ Resources:
           MAX_QUERY_LENGTH: 1024
           TIME_ZONE: !Ref TimeZone
           ZD_EMAIL: !Ref ZendeskEmailID
-          ZD_TOKEN: !Ref ZendeskToken 
+          ZD_TOKEN_ID: zc-API-Token-contact-lens
           ZD_URL: !Ref ZendeskURL
           TRANSCRIPT_LOCATION: !Ref TranscriptLocation
 
