@@ -1,25 +1,35 @@
-import axios  from 'axios';
+import axios from 'axios';
+import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
 
-const init = (email) => {
+const smClient = new SecretsManagerClient({});
+
+const init = async (email) => {
     const credentials = {
         url: process.env.ZD_URL,
         email: email || process.env.ZD_EMAIL,
-        token: process.env.ZD_TOKEN
+        tokenId: process.env.ZD_TOKEN_ID
     };
 
-    if (!credentials.url || !credentials.email || !credentials.token) {
-        console.error('missing credentials in env variables (ZD_URL, ZD_EMAIL, ZD_TOKEN)');
+    if (!credentials.url || !credentials.email || !credentials.tokenId) {
+        console.error('missing credentials in env variables (ZD_URL, ZD_EMAIL, ZD_TOKEN_ID)');
         return null;
     }
 
     try {
-        const raw = `${credentials.email}/token:${credentials.token}`;
-        const encoded = (Buffer.from(raw)).toString('base64');
-        return axios.create({
-            baseURL: credentials.url,
-            timeout: 5000,
-            headers: { 'Authorization': 'Basic ' + encoded }
-        });
+        const command = new GetSecretValueCommand({ SecretId: credentials.tokenId });
+        const secret = await smClient.send(command);
+
+        if ('SecretString' in secret) {
+            const raw = `${credentials.email}/token:${secret.SecretString}`;
+            const encoded = (Buffer.from(raw)).toString('base64');
+            return axios.create({
+                baseURL: credentials.url,
+                timeout: 5000,
+                headers: { 'Authorization': 'Basic ' + encoded, 'Accept': 'application/json' }
+            });
+        } else {
+            throw new Error("Zendesk token secret does not have a string value");
+        }
     }
     catch (err) {
         console.error('Error initiating web client: ', err.message);
@@ -39,7 +49,7 @@ const querySupport = async (webClient, queryUrl) => {
 };
 
 const findTickets = async (contacts) => {
-    const webClient = init();
+    const webClient = await init();
     if (!webClient) return null;
     const maxCount = Math.floor((process.env.MAX_QUERY_LENGTH - 100) / 50);
     const baseQueryStr = '/api/v2/search.json?query=type:ticket';
@@ -93,12 +103,12 @@ const updateTicket = async (ticket, comment) => {
         const response = await querySupport(webClient, tpeCommentsUrl);
         if (!response) return null;
         // console.log('ZD Ticket comments API response: ', response.data);
-        const tpeComment = response.data.comments.find((comment) => comment.type === 'TpeVoiceComment' && 
+        const tpeComment = response.data.comments.find((comment) => comment.type === 'TpeVoiceComment' &&
             comment.data.external_id === ticket.contactId);
         return tpeComment;
     };
-    
-    const webClient = init(ticket.agentEmail);
+
+    const webClient = await init(ticket.agentEmail);
     if (!webClient) return null;
     const tpeComment = await findTpeComment(ticket);
     // console.log(`Updating ticket ${ticket.ticketId} with comment: `, tpeComment);
