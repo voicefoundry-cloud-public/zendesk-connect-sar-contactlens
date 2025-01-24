@@ -55,7 +55,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['Connect','Contact-Lens', 'Zendesk', 'Sentiment', 'Transcript']
     HomePageUrl: https://github.com/voicefoundry-cloud-public/zendesk-connect-sar-contactlens
-    SemanticVersion: 2.2.2
+    SemanticVersion: 2.2.3
     SourceCodeUrl: https://github.com/voicefoundry-cloud-public/zendesk-connect-sar-contactlens
 
 Resources:
@@ -122,6 +122,7 @@ Resources:
           ZD_TOKEN_ID: zc-API-Token-contact-lens
           ZD_URL: !Ref ZendeskURL
           TRANSCRIPT_LOCATION: !Ref TranscriptLocation
+          SUMMARIZATION: "On"
 
       Events:
         scheduledEvent:
