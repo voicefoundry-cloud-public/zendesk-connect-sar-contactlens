@@ -1,111 +1,109 @@
 {
   "AccountId": "243910111328",
   "Categories": {
-    "MatchedCategories": [],
-    "MatchedDetails": {}
+    "MatchedCategories": [
+      "NoAgentGreeting", "DeliveryIssue"
+    ],
+    "MatchedDetails": {
+      "NoAgentGreeting": {
+        "PointsOfInterest": []
+      },
+      "DeliveryIssue": {
+        "PointsOfInterest": []
+      }
+    }
   },
   "Channel": "VOICE",
   "ContentMetadata": {
-    "Output": "Raw"
+    "Output": "Redacted",
+    "RedactionTypes": [
+      "PII"
+    ],
+    "RedactionTypesMetadata": {
+      "PII": {
+        "RedactionMaskMode": "EntityType"
+      }
+    }
   },
   "ConversationCharacteristics": {
+    "ContactSummary": {
+      "PostContactSummary": {
+        "Content": "The customer inquired about their order number 6715, which they placed a couple of weeks ago but have not received any notification about. The agent investigated the order and confirmed it's still with the supplier. The agent agreed to investigate the issue further."
+      }
+    },
     "Interruptions": {
       "InterruptionsByInterrupter": {
+        "AGENT": [
+          {
+            "BeginOffsetMillis": 5245,
+            "DurationMillis": 6390,
+            "EndOffsetMillis": 11635
+          }
+        ],
         "CUSTOMER": [
           {
-            "BeginOffsetMillis": 56229,
-            "DurationMillis": 2131,
-            "EndOffsetMillis": 58360
-          },
-          {
-            "BeginOffsetMillis": 63180,
-            "DurationMillis": 5169,
-            "EndOffsetMillis": 68349
+            "BeginOffsetMillis": 12505,
+            "DurationMillis": 8320,
+            "EndOffsetMillis": 20825
           }
         ]
       },
       "TotalCount": 2,
-      "TotalTimeMillis": 7300
+      "TotalTimeMillis": 14709
     },
     "NonTalkTime": {
-      "Instances": [
-        {
-          "BeginOffsetMillis": 22700,
-          "DurationMillis": 15790,
-          "EndOffsetMillis": 38490
-        },
-        {
-          "BeginOffsetMillis": 45689,
-          "DurationMillis": 5191,
-          "EndOffsetMillis": 50880
-        },
-        {
-          "BeginOffsetMillis": 51330,
-          "DurationMillis": 3519,
-          "EndOffsetMillis": 54849
-        },
-        {
-          "BeginOffsetMillis": 120550,
-          "DurationMillis": 13759,
-          "EndOffsetMillis": 134309
-        },
-        {
-          "BeginOffsetMillis": 141789,
-          "DurationMillis": 4690,
-          "EndOffsetMillis": 146479
-        }
-      ],
-      "TotalTimeMillis": 42949
+      "Instances": [],
+      "TotalTimeMillis": 0
     },
     "Sentiment": {
       "OverallSentiment": {
-        "AGENT": -0.7,
-        "CUSTOMER": 0.6
+        "AGENT": 1.4,
+        "CUSTOMER": 1.7
       },
       "SentimentByPeriod": {
         "QUARTER": {
           "AGENT": [
             {
               "BeginOffsetMillis": 0,
-              "EndOffsetMillis": 19549,
+              "EndOffsetMillis": 7521,
+              "Score": 2.5
+            },
+            {
+              "BeginOffsetMillis": 7521,
+              "EndOffsetMillis": 15042,
               "Score": 0
             },
             {
-              "BeginOffsetMillis": 19549,
-              "EndOffsetMillis": 39099,
+              "BeginOffsetMillis": 15042,
+              "EndOffsetMillis": 22563,
               "Score": 0
             },
             {
-              "BeginOffsetMillis": 39099,
-              "EndOffsetMillis": 58649,
-              "Score": -5
-            },
-            {
-              "BeginOffsetMillis": 58649,
-              "EndOffsetMillis": 78199,
-              "Score": 0
+              "BeginOffsetMillis": 22563,
+              "EndOffsetMillis": 30085,
+              "Score": 2.5
             }
           ],
           "CUSTOMER": [
             {
               "BeginOffsetMillis": 0,
-              "EndOffsetMillis": 36884,
+              "EndOffsetMillis": 7171,
+              "Score": 3.3
+            },
+            {
+              "BeginOffsetMillis": 7171,
+              "EndOffsetMillis": 14342,
               "Score": 0
             },
             {
-              "BeginOffsetMillis": 36884,
-              "EndOffsetMillis": 73769,
-              "Score": 1
-            },
-            {
-              "BeginOffsetMillis": 73769,
-              "EndOffsetMillis": 110654,
+              "BeginOffsetMillis": 14342,
+              "EndOffsetMillis": 21513,
               "Score": 0
             },
             {
-              "BeginOffsetMillis": 110654,
-              "EndOffsetMillis": 147539,
-              "Score": 0
+              "BeginOffsetMillis": 21513,
+              "EndOffsetMillis": 28685,
+              "Score": 2.5
             }
           ]
         }
@@ -114,29 +112,29 @@
     "TalkSpeed": {
       "DetailsByParticipant": {
         "AGENT": {
-          "AverageWordsPerMinute": 117
+          "AverageWordsPerMinute": 125
         },
         "CUSTOMER": {
-          "AverageWordsPerMinute": 115
+          "AverageWordsPerMinute": 114
         }
       }
     },
     "TalkTime": {
       "DetailsByParticipant": {
         "AGENT": {
-          "TotalTimeMillis": 12771
+          "TotalTimeMillis": 18660
         },
         "CUSTOMER": {
-          "TotalTimeMillis": 61597
+          "TotalTimeMillis": 21139
         }
       },
-      "TotalTimeMillis": 74368
+      "TotalTimeMillis": 39799
     },
-    "TotalConversationDurationMillis": 147539
+    "TotalConversationDurationMillis": 30085
   },
   "CustomerMetadata": {
-    "InputS3Uri": "s3://vf-connect-cde3244d-b64e-4354-a37e-3313ac7ac852/recordings/2023/08/04/7b8e05d5-1e18-4f06-b8e4-8a6e1c97639c_20230804T07:37_UTC.wav",
-    "ContactId": "7b8e05d5-1e18-4f06-b8e4-8a6e1c97639c",
+    "InputS3Uri": "s3://vf-connect-cde3244d-b64e-4354-a37e-3313ac7ac852/recordings/2025/01/23/0c129ed7-5c5a-42af-ba83-e7c52c6b035e_20250123T07:17_UTC.wav",
+    "ContactId": "0c129ed7-5c5a-42af-ba83-e7c52c6b035e",
     "InstanceId": "cde3244d-b64e-4354-a37e-3313ac7ac852"
   },
   "CustomModels": [],
@@ -144,288 +142,205 @@
   "LanguageCode": "en-US",
   "Participants": [
     {
-      "ParticipantId": "CUSTOMER",
-      "ParticipantRole": "CUSTOMER"
-    },
-    {
       "ParticipantId": "AGENT",
       "ParticipantRole": "AGENT"
+    },
+    {
+      "ParticipantId": "CUSTOMER",
+      "ParticipantRole": "CUSTOMER"
     }
   ],
   "Transcript": [
     {
-      "BeginOffsetMillis": 22479,
-      "Content": "Um,",
-      "EndOffsetMillis": 22700,
-      "Id": "62eb7b60-ca33-4740-9734-90bed1baf3b9",
+      "BeginOffsetMillis": 2945,
+      "Content": "Hey, good morning.",
+      "EndOffsetMillis": 4315,
+      "Id": "0a75551c-38ed-46bd-a3fd-31d29a0e9b0e",
       "LoudnessScore": [
-        54.34
+        81.13,
+        89.54,
+        50.82
       ],
       "ParticipantId": "AGENT",
-      "Sentiment": "NEUTRAL"
+      "Sentiment": "POSITIVE"
     },
     {
-      "BeginOffsetMillis": 38490,
-      "Content": "Right now. Thank you for calling. Your call is very important to us and will be answered in the order it was received. Hello.",
-      "EndOffsetMillis": 51330,
-      "Id": "fa9e6853-0df5-478b-ba10-dc17a0a2dbd0",
+      "BeginOffsetMillis": 3055,
+      "Content": "Hey, good morning.",
+      "EndOffsetMillis": 4365,
+      "Id": "af70fcd2-524e-4cd2-a40b-84e381165d13",
       "LoudnessScore": [
-        86.76,
-        76.07,
-        81.58,
-        84.43,
-        82.14,
-        81.37,
-        80.59,
-        79,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        80.85,
+        74.54
       ],
       "ParticipantId": "CUSTOMER",
       "Sentiment": "POSITIVE"
     },
     {
-      "BeginOffsetMillis": 54849,
-      "Content": "why is this music playing on my phone?",
-      "EndOffsetMillis": 58360,
-      "Id": "6456abc1-9360-4d3d-a3b2-5ff24e42fe7f",
+      "BeginOffsetMillis": 5065,
+      "Content": "I'm just about my order number 671.",
+      "EndOffsetMillis": 9775,
+      "Id": "53a2a8c1-595a-438f-ae1e-fc45195c5d35",
       "LoudnessScore": [
-        0,
-        80.98,
-        79.98,
-        75.95,
-        74.25
-      ],
-      "ParticipantId": "AGENT",
-      "Sentiment": "NEGATIVE"
-    },
-    {
-      "BeginOffsetMillis": 56229,
-      "Content": "Yep, I can see it. 29 25.",
-      "EndOffsetMillis": 60400,
-      "Id": "ff17ba9a-b506-4d6f-b168-47b4c6cf6825",
-      "LoudnessScore": [
-        70.22,
-        68.61,
-        65.77,
-        66.95,
-        67.58
+        72.44,
+        72.55,
+        76.19,
+        76.03,
+        74.92
       ],
       "ParticipantId": "CUSTOMER",
       "Sentiment": "NEUTRAL"
     },
     {
-      "BeginOffsetMillis": 61619,
-      "Content": "Ok.",
-      "EndOffsetMillis": 62310,
-      "Id": "18e85c2c-6f96-4e07-a47c-2884232a52a5",
-      "LoudnessScore": [
-        81.02,
-        80.25
-      ],
-      "ParticipantId": "AGENT",
-      "Sentiment": "NEUTRAL"
-    },
-    {
-      "BeginOffsetMillis": 61959,
-      "Content": "Ok.",
-      "EndOffsetMillis": 62669,
-      "Id": "b7cc1a8b-ea07-4ad6-b3f3-efe215913294",
-      "LoudnessScore": [
-        44.61,
-        78.89
-      ],
-      "ParticipantId": "CUSTOMER",
-      "Sentiment": "NEUTRAL"
-    },
-    {
-      "BeginOffsetMillis": 62810,
-      "Content": "We are now all conference.",
-      "EndOffsetMillis": 66069,
-      "Id": "b5a8289d-ff30-4fb0-a26c-f7599a4398ba",
-      "LoudnessScore": [
-        80.25,
-        78.86,
-        74.24,
-        79.96,
-        81.14
-      ],
-      "OutcomesDetected": [
+      "BeginOffsetMillis": 5245,
+      "Content": "Just inquiring about my order number 671.",
+      "EndOffsetMillis": 9565,
+      "Id": "b131edfc-21e1-4742-af12-1c529a709540",
+      "IssuesDetected": [
         {
           "CharacterOffsets": {
             "BeginOffsetChar": 0,
-            "EndOffsetChar": 25
+            "EndOffsetChar": 40
           },
-          "Text": "We are now all conference"
+          "Text": "Just inquiring about my order number 671"
         }
       ],
-      "ParticipantId": "AGENT",
-      "Sentiment": "NEUTRAL"
-    },
-    {
-      "BeginOffsetMillis": 63180,
-      "Content": "We are now all conference.",
-      "EndOffsetMillis": 66370,
-      "Id": "1762a936-7efc-4dcf-b56d-167d169b3712",
       "LoudnessScore": [
-        78.24,
-        76.38,
-        74.88,
-        84.49
-      ],
-      "ParticipantId": "CUSTOMER",
-      "Sentiment": "NEUTRAL"
-    },
-    {
-      "BeginOffsetMillis": 66080,
-      "Content": "Do you see the call recording?",
-      "EndOffsetMillis": 68349,
-      "Id": "0adc1a19-8b0e-4bf2-962c-64c64a55294b",
-      "LoudnessScore": [
-        81.14,
-        81.69,
-        79.99
-      ],
-      "ParticipantId": "AGENT",
-      "Sentiment": "NEUTRAL"
-    },
-    {
-      "BeginOffsetMillis": 66379,
-      "Content": "Do you see the call recording? Yep. This pattern for recording?",
-      "EndOffsetMillis": 73580,
-      "Id": "aec5f169-86fb-4998-9eb3-43c89e1d285d",
-      "LoudnessScore": [
-        84.49,
-        82.14,
+        77.06,
+        78.16,
         79.68,
-        57.51,
-        73.68,
-        74.38,
-        73.74,
-        70.12
-      ],
-      "ParticipantId": "CUSTOMER",
-      "Sentiment": "NEUTRAL"
-    },
-    {
-      "BeginOffsetMillis": 74290,
-      "Content": "Mhm.",
-      "EndOffsetMillis": 74900,
-      "Id": "327de419-2978-418b-beaf-36cee41200ce",
-      "LoudnessScore": [
-        75.36
+        78.8,
+        74.84
       ],
       "ParticipantId": "AGENT",
       "Sentiment": "NEUTRAL"
     },
     {
-      "BeginOffsetMillis": 74620,
-      "Content": "Mhm.",
-      "EndOffsetMillis": 75230,
-      "Id": "ba3bc1fe-41c8-4f05-9dc7-fab3fac8e864",
+      "BeginOffsetMillis": 9885,
+      "Content": "2405.",
+      "EndOffsetMillis": 11635,
+      "Id": "9c9f95fd-0ed5-4758-b91f-cb515d5dd6cc",
       "LoudnessScore": [
-        79.7,
+        74.84,
+        81.97,
+        80.38
+      ],
+      "ParticipantId": "AGENT",
+      "Sentiment": "NEUTRAL"
+    },
+    {
+      "BeginOffsetMillis": 10045,
+      "Content": "245.",
+      "EndOffsetMillis": 11875,
+      "Id": "bfb23aee-650a-466a-acdc-a7f7c646774d",
+      "LoudnessScore": [
+        79.55,
         79.03
       ],
       "ParticipantId": "CUSTOMER",
       "Sentiment": "NEUTRAL"
     },
     {
-      "BeginOffsetMillis": 75989,
-      "Content": "Can you click?",
-      "EndOffsetMillis": 78199,
-      "Id": "b4395bfe-28c5-4947-bd3a-59ccb5db777a",
+      "BeginOffsetMillis": 12365,
+      "Content": "Uh, which was placed a couple of weeks ago and I still haven't.",
+      "EndOffsetMillis": 17155,
+      "Id": "f96e7a4c-9e69-41b1-9d88-22d06ba80939",
       "LoudnessScore": [
-        65.96,
-        86.07,
-        83.54,
-        77.15
+        77.41,
+        78.41,
+        78.84,
+        82.34,
+        80.54,
+        76.22
       ],
       "ParticipantId": "AGENT",
       "Sentiment": "NEUTRAL"
     },
     {
-      "BeginOffsetMillis": 76400,
-      "Content": "Can you, we can stop recording? Ok. Clicking on the post recording, the recording will be passed now will be on somebody calling in 5432 one on the recording recordings will be back. Yeah. Do you want to do it again? No, that's ok. Let, let me try to do from my end as well. Ok. So,",
-      "EndOffsetMillis": 120550,
-      "Id": "59e6eed1-1353-4b71-8823-796d309720b4",
+      "BeginOffsetMillis": 12505,
+      "Content": "Uh, with, with like a couple of weeks ago and I still haven't received any notification of whether it's for 5.",
+      "EndOffsetMillis": 23175,
+      "Id": "67147640-4365-4903-bfe4-949c54565f16",
       "LoudnessScore": [
-        87.39,
-        87.19,
-        75.23,
-        76.33,
-        75.37,
-        51.4,
-        72.66,
-        71.85,
-        71.08,
-        69.42,
-        6.7,
-        62.35,
-        68.02,
-        69.99,
-        74.24,
-        70.08,
-        42.95,
-        78.32,
-        77.86,
-        76.03,
-        74.04,
-        76.5,
-        75.95,
-        79.86,
-        77.47,
-        76.41,
-        53.61,
-        6.43,
-        77.6,
-        78.41,
-        77.82,
-        75.25,
-        75.88,
-        82.73,
-        85.55,
-        83.79,
-        55.72,
-        85.44,
-        83.36,
-        78.51,
-        75.33,
-        78.2,
-        76.81,
-        70.36,
-        77.39
+        74.26,
+        77.08,
+        80.23,
+        86.47,
+        82.22,
+        76.89,
+        76.91,
+        81.78,
+        78.35,
+        78.68,
+        78.46,
+        76.3
       ],
       "ParticipantId": "CUSTOMER",
       "Sentiment": "NEUTRAL"
     },
     {
-      "BeginOffsetMillis": 134309,
-      "Content": "and it's resumed. So that should be recorded. Ok. Ok. Thank you.",
-      "EndOffsetMillis": 147539,
-      "Id": "4af8e01b-a0e2-4090-a8b2-52f28aca42d1",
+      "BeginOffsetMillis": 17565,
+      "Content": "Received any notification of whether it was.",
+      "EndOffsetMillis": 20825,
+      "Id": "5eda3b55-c609-4a92-9f1c-3e48c9ed2053",
       "LoudnessScore": [
-        74.23,
-        77.04,
-        69.52,
-        78.22,
-        76.48,
-        75.26,
-        60.62,
-        81.76,
-        0,
-        0,
-        0,
-        0,
-        79.57,
-        88.3
+        76.22,
+        80.07,
+        77.93,
+        80.86
+      ],
+      "ParticipantId": "AGENT",
+      "Sentiment": "NEUTRAL"
+    },
+    {
+      "BeginOffsetMillis": 24375,
+      "Content": "Uh, can you please investigate.",
+      "EndOffsetMillis": 26495,
+      "Id": "12b5a6ae-0dfc-46f2-8fa9-d322eed5a468",
+      "LoudnessScore": [
+        76.29,
+        80.86,
+        82.65
+      ],
+      "ParticipantId": "AGENT",
+      "Sentiment": "NEUTRAL"
+    },
+    {
+      "BeginOffsetMillis": 24645,
+      "Content": "Uh, can you please, yes.",
+      "EndOffsetMillis": 27225,
+      "Id": "37b1d6ce-0f44-477a-9330-9c1fe187fc30",
+      "LoudnessScore": [
+        73.15,
+        78.86,
+        81.51,
+        80.34
       ],
       "ParticipantId": "CUSTOMER",
       "Sentiment": "NEUTRAL"
+    },
+    {
+      "BeginOffsetMillis": 28645,
+      "Content": "Thanks very much.",
+      "EndOffsetMillis": 28685,
+      "Id": "97021d0e-3796-45b7-aed2-5ac5613e3247",
+      "LoudnessScore": [
+        54.13
+      ],
+      "ParticipantId": "CUSTOMER",
+      "Sentiment": "POSITIVE"
+    },
+    {
+      "BeginOffsetMillis": 29035,
+      "Content": "Thanks very much.",
+      "EndOffsetMillis": 30085,
+      "Id": "1ad2c4d0-595b-4a42-ba73-4137fb1c9b6a",
+      "LoudnessScore": [
+        79.14,
+        77.3
+      ],
+      "ParticipantId": "AGENT",
+      "Sentiment": "POSITIVE"
     }
   ],
   "Version": "1.1.0"

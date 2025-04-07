@@ -1,16 +1,22 @@
 console.log('Loading function');
+const SCHEDULED = "Scheduled Event";
+const OBJECT = "Object Created";
 
 import api from './api.mjs';
 import buildComment from './ticketComment.mjs';
-import dynamoDB  from './dynamoDB.mjs';
+import dynamoDB from './dynamoDB.mjs';
 import s3 from './s3.mjs';
 
 export const handler = async (event, context) => {
     // console.log('Received event:', JSON.stringify(event, null, 2));
 
-    if (event.Records) {
+    const detailType = event["detail-type"];
+
+    if (detailType === OBJECT) {
         // Get the key of s3 object that triggered this function by being uploaded to the bucket
-        const s3key = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
+        const s3key = decodeURIComponent(event.detail.object.key.replace(/\+/g, ' '));
+        // skip if it's not a .json file
+        if (!s3key.endsWith(".json")) return;
         // then get the analysis object itself
         const { contactId, analysis } = await s3.getAnalysis(s3key);
         // console.log('Analysis record: ', { contactId, analysis });
@@ -35,7 +41,7 @@ export const handler = async (event, context) => {
             await dynamoDB.addRetry(retry);
         }
 
-    } else {
+    } else if (detailType === SCHEDULED) {
         // EventBridge triggered a scheduled retry
         console.log('Scheduled trigger. Checking DB:');
         const { retries, count } = await dynamoDB.getAllRetries();
@@ -64,6 +70,9 @@ export const handler = async (event, context) => {
         });
 
         await Promise.all(asyncRequests);
+    
+    } else {
+        console.error("Unexpected event type: ", detailType);
     }
 
 };

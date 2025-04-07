@@ -55,7 +55,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['Connect','Contact-Lens', 'Zendesk', 'Sentiment', 'Transcript']
     HomePageUrl: https://github.com/voicefoundry-cloud-public/zendesk-connect-sar-contactlens
-    SemanticVersion: 2.1.1
+    SemanticVersion: 2.2.3
     SourceCodeUrl: https://github.com/voicefoundry-cloud-public/zendesk-connect-sar-contactlens
 
 Resources:
@@ -90,7 +90,7 @@ Resources:
     Properties:
       FunctionName: !Sub "contactLensZendeskUpdate-${TargetEnvironment}"
       Description: "Triggered on upload of Contact Lens analysis to S3 bucket, it finds and updates the matching Zendesk support ticket"
-      Runtime: nodejs20.x
+      Runtime: nodejs22.x
       Handler: index.handler
       CodeUri: updateTicket/
       Timeout: 240
@@ -122,6 +122,7 @@ Resources:
           ZD_TOKEN_ID: zc-API-Token-contact-lens
           ZD_URL: !Ref ZendeskURL
           TRANSCRIPT_LOCATION: !Ref TranscriptLocation
+          SUMMARIZATION: "On"
 
       Events:
         scheduledEvent:
@@ -130,3 +131,20 @@ Resources:
             Schedule: 'rate(5 minutes)'
             Name: !Sub zendeskRetrySchedule-${TargetEnvironment}
             Description: invokes contactLensZendeskUpdate lambda which retries finding a matching support ticket
+
+        eventBridgeRule:
+          Type: EventBridgeRule
+          Properties:
+            RuleName: ContactLensS3EventRule
+            Pattern:
+              source:
+                - aws.s3
+              detail-type:
+                - Object Created
+              detail:
+                bucket:
+                  name:
+                    - !Ref ConnectBucket
+                object:
+                  key:
+                    - prefix: Analysis/Voice/Redacted/

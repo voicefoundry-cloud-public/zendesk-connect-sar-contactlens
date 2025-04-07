@@ -31,6 +31,25 @@ const buildOverallSentiment = (analysis, side) => {
         `<p>Positive: ${positiveRate}%</p><p>Negative: ${negativeRate}%</p><p>Neutral: ${neutralRate}%</p><p>Mixed: ${mixedRate}%</p>`;
 };
 
+const addSummary = () => {
+    const summarizationFlag = process.env.SUMMARIZATION?.toLowerCase();
+    const flagOptions = ["on", "true", "yes", "t", "y"];
+    return summarizationFlag && flagOptions.includes(summarizationFlag);
+}
+
+const buildSummary = (analysis) => {
+    let summary = analysis.ConversationCharacteristics.ContactSummary?.PostContactSummary?.Content;
+    if (!summary) {
+        summary =  "Not generated";
+        const skippedAnalysis = analysis.JobDetails?.SkippedAnalysis || [];
+        const reasonCode = skippedAnalysis.find(item => item.Feature === "POST_CONTACT_SUMMARY")?.ReasonCode;
+        if (reasonCode) {
+            summary += " - " + reasonCode;
+        }
+    }
+    return `<p><strong>Summary: </strong>${summary}.<br />&nbsp;</p>`;
+}
+
 const getCTRLink = (analysis) => {
     const contactId = analysis.CustomerMetadata.ContactId;
     let url = process.env.CONNECT_INSTANCE_URL;
@@ -114,6 +133,7 @@ const buildComment = (analysis) => {
             view the ${getCTRLink(analysis)}</div>`;
     // talk speed, interruptions and times
     const sectionConversation = getTitle('Conversation characteristics') + `
+        ${addSummary() ? '<div style="width: 100%">' + buildSummary(analysis) + '</div>' : ''}
         <div style="float:left; width: 50%;">${buildConversationCharacteristics(analysis, 'Agent')}</div>
         <div>${buildConversationCharacteristics(analysis, 'Customer')}</div><div style="margin-bottom: 10px;">&nbsp;</div>`;
     // transcript
