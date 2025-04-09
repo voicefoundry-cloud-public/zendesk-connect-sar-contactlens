@@ -53,9 +53,9 @@ Metadata:
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
     ReadmeUrl: README.md
-    Labels: ['Connect','Contact-Lens', 'Zendesk', 'Sentiment', 'Transcript']
-    HomePageUrl: https://github.com/voicefoundry-cloud-public/zendesk-connect-sar-contactlens
-    SemanticVersion: 2.2.3
+    Labels: ['Connect','Contact-Lens', 'Zendesk', 'Summary', 'Transcript', 'Sentiment']
+    HomePageUrl: https://zendeskconnector.ttecdigital.solutions/zendesk/Working-version
+    SemanticVersion: 2.2.4
     SourceCodeUrl: https://github.com/voicefoundry-cloud-public/zendesk-connect-sar-contactlens
 
 Resources:
