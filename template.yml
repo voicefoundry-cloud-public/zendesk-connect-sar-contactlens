@@ -55,7 +55,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['Connect','Contact-Lens', 'Zendesk', 'Summary', 'Transcript', 'Sentiment']
     HomePageUrl: https://zendeskconnector.ttecdigital.solutions/zendesk/Working-version
-    SemanticVersion: 2.2.4
+    SemanticVersion: 2.2.5
     SourceCodeUrl: https://github.com/voicefoundry-cloud-public/zendesk-connect-sar-contactlens
 
 Resources:
@@ -148,3 +148,16 @@ Resources:
                 object:
                   key:
                     - prefix: Analysis/Voice/Redacted/
+    # Metadata:
+    #   BuildMethod: esbuild
+    #   BuildProperties:
+    #     Minify: true        
+    #     Bundle: true         
+    #     Target: "es2020"
+    #     EntryPoints: 
+    #       - index.mjs
+    #     External:
+    #       - "@aws-sdk/client-secrets-manager"
+    #       - "@aws-sdk/client-dynamodb"
+    #       - "@aws-sdk/client-s3"
+    
